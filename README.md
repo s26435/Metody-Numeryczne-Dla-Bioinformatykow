@@ -133,9 +133,9 @@ python nazwa_skryptu.py
 # Session 1: <br>
    File: ```binary.py``` <br>
    Operations for converting decimal floating-point numbers to binary and vice versa, along with demonstrating conversion error.
-    * ```float_to_binary```: Converts a floating-point number to binary format with precision specified by tolerance.
-    * ```find_upper_and_lower_approximation```: Finds and returns the nearest binary approximations (upper and lower) for a given floating-point number within a specified tolerance.
-    * ```binary_fraction_to_exponent```: Transforms a binary fraction into normalized scientific notation, returning the mantissa and exponent.
+   * ```float_to_binary```: Converts a floating-point number to binary format with precision specified by tolerance.
+   * ```find_upper_and_lower_approximation```: Finds and returns the nearest binary approximations (upper and lower) for a given floating-point number within a specified tolerance.
+   * ```binary_fraction_to_exponent```: Transforms a binary fraction into normalized scientific notation, returning the mantissa and exponent.
     <p>The script calculates and displays the binary representation of a number, its upper and lower approximations, and the approximation error for a given floating-point number with specified tolerance.</p>
 
 # Session 2: <br>
