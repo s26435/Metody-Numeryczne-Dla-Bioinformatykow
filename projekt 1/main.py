@@ -68,7 +68,7 @@ def nth_root(a: float, n: float, x0: float = float('-inf'), tolerance: float = 1
         print(f"An unexpected error occurred: {str(e)}", file=sys.stderr)
 
 
-print(f'Dla x0 = 6, a = 161, n = 1/3:\t {nth_root("161", 3, 6)}')
+print(f'Dla x0 = 6, a = 161, n = 1/3:\t {nth_root(161, 3, 6)}')
 print(f'Dla x0 = 2, a = 21,75, n = 1/4:\t {nth_root(21.75, 4, 2)}')
 print(f'Dla x0 = 3, a = 238,56, n = 1/5:\t {nth_root(161, 5, 3)}')
 
