@@ -2,6 +2,8 @@
 Autor: Jan Wolski <br>
 Nr. Studenta: 292407
 
+[Link do pliku .ipnb na google colab](https://colab.research.google.com/drive/1te_oOTTLAURwqqsWeR02OFN4zPV60qOx?usp=sharing)
+
 ### Zadanie 1
 Używając wzoru Newtona: <br>
 ![Equasion](https://quicklatex.com/cache3/6c/ql_670436146eca0d41aa3186a81b398a6c_l3.png) <br>
