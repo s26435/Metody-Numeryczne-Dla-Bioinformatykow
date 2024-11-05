@@ -16,6 +16,7 @@ Nr. Studenta: 292407
 import numpy as np
 import pandas as pd
 import sympy as sp
+import sys
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -34,30 +35,40 @@ oblicz pierwiastki:
 def nth_root(a: float, n: float, x0: float = float('-inf'), tolerance: float = 1e-10,
              max_iterations: int = 1000) -> float:
     try:
-        if a <= 0:
-            raise ValueError(f'a > 0, a otrzymano {a}')
-        if n <= 0:
-            raise ValueError(f'n > 0, a otrzymano {n}')
+        if not (isinstance(a, (float, int)) and isinstance(n, (float, int)) and isinstance(x0, (float, int))
+                and isinstance(tolerance, (float, int)) and isinstance(max_iterations, int)):
+            raise TypeError(f'One or more arguments have an incorrect type.\n'
+                            f'Expected: float, float, float, float, int\n'
+                            f'Got: {type(a)}, {type(n)}, {type(x0)}, {type(tolerance)}, {type(max_iterations)}')
 
-        if x0 == float('-inf'):
-            x = a
-        else:
-            x = x0
+        if a < 0 and int(n) % 2 == 0:
+            raise ValueError(f"Cannot calculate even root of a negative number: a = {a}, n = {n}")
+        if a <= 0:
+            raise ValueError(f"'a' must be positive, but got a = {a}")
+        if n <= 0:
+            raise ValueError(f"'n' must be positive, but got n = {n}")
+
+        x = a if x0 == float('-inf') else x0
+
         for i in range(max_iterations):
             x_next = x * (1 - 1 / n) + a / (n * x ** (n - 1))
             if abs(x - x_next) < tolerance:
                 return x_next
+
             x = x_next
 
-        raise ValueError("Nie udało się znaleźć pierwiastka z zadaną dokładnością.")
-
+        raise ValueError("Failed to converge to the nth root within the specified tolerance.")
+    except TypeError as te:
+        print(f"Wrong argument types: {te}", file=sys.stderr)
+    except ZeroDivisionError:
+        print("Division by zero encountered. Ensure 'n' is not 1 if unexpected behavior arises.", file=sys.stderr)
     except ValueError as ve:
-        print(f"Błąd wartości: {ve}")
+        print(f"Value Error: {ve}", file=sys.stderr)
     except Exception as e:
-        print(f'Podczas liczenia nastąpił błąd: {str(e)}')
+        print(f"An unexpected error occurred: {str(e)}", file=sys.stderr)
 
 
-print(f'Dla x0 = 6, a = 161, n = 1/3:\t {nth_root(161, 3, 6)}')
+print(f'Dla x0 = 6, a = 161, n = 1/3:\t {nth_root("161", 3, 6)}')
 print(f'Dla x0 = 2, a = 21,75, n = 1/4:\t {nth_root(21.75, 4, 2)}')
 print(f'Dla x0 = 3, a = 238,56, n = 1/5:\t {nth_root(161, 5, 3)}')
 
@@ -69,32 +80,56 @@ zaczynając od $x_0 = 0$ i ziększając o 0,1 aż do 10.
 """
 
 
-def zad_2(tolerance: float = 1e-6, max_iterations: int = 100):
-    x = sp.symbols('x')
-    y = sp.symbols('y')
-    fn = 3 * x ** 7 + 2 * y ** 5 - x ** 3 + y ** 3 - 3
-    dfn = sp.diff(fn, y)
+def zad_2(tolerance: float = 1e-6, max_iterations: int = 100) -> pd.DataFrame:
+    try:
+        if not (isinstance(tolerance, float) and isinstance(max_iterations, int)):
+            raise NameError(f'Tolerance need to be float got :{type(tolerance)} and max_iterations need to be int got: '
+                            f'{type(max_iterations)}')
+        if tolerance <= 0:
+            raise ValueError("Tolerance must be positive.")
+        if max_iterations <= 0:
+            raise ValueError("Max iterations must be a positive integer.")
 
-    func = sp.lambdify((x, y), fn)
-    funcprim = sp.lambdify((x, y), dfn)
-    x_values = np.arange(0, 10.1, 0.1)
-    y_values = []
-    for x in x_values:
-        y = 1
-        for _ in range(max_iterations):
-            val = func(x, y)
-            d = funcprim(x, y)
-            if abs(d) < tolerance / 2:
-                break
+        x = sp.symbols('x')
+        y = sp.symbols('y')
+        fn = 3 * x ** 7 + 2 * y ** 5 - x ** 3 + y ** 3 - 3
+        dfn = sp.diff(fn, y)
 
-            y_new = y - val / d
+        func = sp.lambdify((x, y), fn)
+        funcprim = sp.lambdify((x, y), dfn)
 
-            if abs(y_new - y) < tolerance:
+        x_values = np.arange(0, 10.1, 0.1)
+        y_values = []
+
+        for x in x_values:
+            y = 1
+            for _ in range(max_iterations):
+                val = func(x, y)
+                d = funcprim(x, y)
+
+                if abs(d) < tolerance / 2:
+                    print(f"Warning: Derivative is very small (|d| < {tolerance / 2}) at x={x}, y={y}.")
+                    break
+
+                y_new = y - val / d
+
+                if abs(y_new - y) < tolerance:
+                    y = y_new
+                    break
+
                 y = y_new
-                break
-            y = y_new
-        y_values.append(y)
-    return pd.DataFrame({'x': x_values, 'y': y_values})
+            y_values.append(y)
+
+        return pd.DataFrame({'x': x_values, 'y': y_values})
+
+    except NameError as ne:
+        print(f"Name Error: {ne}", file=sys.stderr)
+    except ValueError as ve:
+        print(f"Value Error: {ve}", file=sys.stderr)
+    except ZeroDivisionError:
+        print("Error: Division by zero encountered in derivative calculation.", file=sys.stderr)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}", file=sys.stderr)
 
 
 print(zad_2())
